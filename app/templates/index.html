@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="home">
+        <script>
+            setCoords(12.971598777, 77.5945627 );
+            window.onload=initialize;
+        </script>
+        <h1 class="text-center">Span the world in Photos</h1>
+        <div id="canvas-cont">
+             <ul id="photo-panel">
+              <li><strong>Photos clicked</strong></li>
+            </ul>
+            <div id="map-canvas"></div>
+        </div>
+    </div>
+{% endblock %}

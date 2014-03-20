@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container stream col-sm-12">
+        <div class="col-sm-7 col-sm-offset-1 streambody clearfix">
+            <div class="body_top clearfix">
+                <a href="{{ url_for('stream', category='popular') }}"
+                   {% if cat == 'popular' %}
+                        class="pull-left btn btn-primary disabled"
+                    {% else %}
+                        class="pull-left btn btn-primary"
+                    {% endif %}
+                >Popular</a>
+                <a href="{{ url_for('stream', category='recent') }}"
+                   {% if cat == 'recent' %}
+                        class="pull-left btn btn-danger disabled"
+                    {% else %}
+                        class="pull-left btn btn-danger"
+                    {% endif %}
+                >Recent</a>
+            </div>
+            <div class="body_bottom">
+                {% for photo in data.photos %}
+                    <div class="cont">
+                        <h2 class="text-center">{{ photo.photo_title }}</h2>
+                        <a href="{{ photo.photo_file_url }}">
+                            <img src="{{ photo.photo_file_url }}" alt="{{ photo.photo_title }}" title="{{ photo.photo_title }}"
+                                 class="img-rounded img-thumbnail" />
+                        </a>
+                        <p><span><i>&copy; <a href="{{ photo.owner_url }}">{{ photo.owner_name }}</a></i></span>
+                        <span><i>{{ photo.upload_date }}</i></span></p>
+                        <div class="photo-rep-cont">
+                        {% if not photo.comments is none %}
+                            {% for comment in photo.comments %}
+                                <div class="photo-rep">
+                                    <input type="hidden" name="cid" value="{{ comment.id }}" />
+                                        <a class="username pull-left" href="javascript:void(0)"><img src="{{ comment.photo }}" /></a>
+                                    {% if g.user.id == comment.uid %}
+                                        <a class="del-super pull-right" href="javascript:void(0)"><img title="Remove Comment" alt="Remove Comment" src="/static/img/del.png"></a>
+                                    {% endif %}
+                                    <p><span>{{ comment.fullname }}</span> {{ comment.body }}<br /><i>{{momentjs(comment.timestamp).fromNow()}}</i></p>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        </div>
+                        <div class="cmt-cont">
+                            <input type="hidden" name="id" value="{{ photo.photo_id }}" />
+                            <a title="{{ g.user.username }}" href="#" class="username">
+                                <img title="{{ g.user.username }}" alt="{{ g.user.username }}" src="{{ g.user.photo }}" />
+                            </a>
+                            <textarea placeholder="Write a comment..." class="say"></textarea>
+                            <button class="btn btn-primary btn-sm">Reply</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 sidebar">
+            <div class="activity-cont">
+                <p>User Activity</p>
+                <div class="activity">
+                    {% if not g.activity is none %}
+                        <ul>
+                            {% for activity in g.activity %}
+                                <li><a>{{ activity.username }}</a> {{ activity.activity }}
+                                    <a href="http://www.panoramio.com/photo/{{ activity.photo_id }}">this</a> photo.</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-center"><a class="signin" href="javascript:void(0)">Log in</a> to view user activity</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% if g.user.is_authenticated() %}
+            <div class="activity-cont">
+                <p>My Activity</p>
+                <div class="activity">
+                    {% if not g.activity is none %}
+                        <ul>
+                            {% for activity in g.my_activity %}
+                                <li>You {{ activity.activity }}
+                                    <a href="http://www.panoramio.com/photo/{{ activity.photo_id }}">this</a> photo.</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

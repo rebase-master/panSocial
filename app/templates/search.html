@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="home">
+    {% if place is not sameas "null" %}
+        <script>
+            setCoords({{ lat }},{{ lng }});
+            window.onload=initialize;
+        </script>
+        <h1 class="text-center">Search Results for: {{ place }}</h1>
+        <div id="canvas-cont">
+            <div id="map-canvas"></div>
+        </div>
+    {% else %}
+        <div class="bg-danger text-center alert-message">
+            <p>Your search returned no result. Search again for a valid location.</p>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}
